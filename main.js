@@ -1,5 +1,8 @@
+const fs = require('fs')
 const syllable = require('syllable')
 const punctuationRE = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-./:;<=>?@[\]^_`{|}~]/g
+const easyWprds = fs.readFileSync('easy_words.txt', 'utf-8')
+const easyWordSet = new Set(easyWprds.split(/\n/g))
 
 // extends Math object
 Math.copySign = (x, y) => {
@@ -51,7 +54,7 @@ class Readability {
     if (!text) return 0
     // eventually replace syllable
     const count = syllable(text)
-    return count //  js lib overs compared to python 
+    return count  //  js lib overs compared to python 
   }
   sentenceCount (text) {
     let ignoreCount = 0
@@ -161,8 +164,16 @@ class Readability {
     returnVal = Math.legacyRound(returnVal, 1)
     return !isNaN(returnVal) ? returnVal : 0.0
   }
-  difficultWords (text, syllable_threshold = 2) {
+  difficultWords (text, syllableThreshold = 2) {
     // to be implemented
+    const textList = text.match(/[\w=‘’]+/g)
+    const diffWordsSet = new Set()
+    for (let word of textList) {
+      if (!easyWordSet.has(word) && this.syllableCount(word) >= syllableThreshold) {
+        diffWordsSet.add(word)
+      }
+    }
+    return [...diffWordsSet].length
   }
   daleChallReadabilityScore (text) {
     // to be implmented

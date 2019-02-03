@@ -27,6 +27,7 @@ function test () {
   console.log('automatedReadabilityIndex: \n', ts.automatedReadabilityIndex(text))
   console.log('textStandard: \n', ts.textStandard(text))
   console.log('linsearWriteFormula: \n', ts.linsearWriteFormula(text))
+  console.log('difficultWords: \n', ts.difficultWords(text))
 }
 test()
 console.log('Time taken for execution : ', Date.now() - a, 'ms')
