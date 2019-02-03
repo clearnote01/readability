@@ -1,6 +1,6 @@
 {
   "name": "text-readablity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -10,5 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "syllable": "^3.4.0"
-  }
+  },
+  "homepage": "https://github.com/clearnote01/readability#readme",
+  "keywords": [
+    "statistics",
+    "text analysis",
+    "flesch"
+  ]
 }
