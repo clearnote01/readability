@@ -8,7 +8,7 @@ A rewrite of textstat library in JS
 install required packages with npm install
 
 ```javascript
->>> const readablity = require('readability')
+>>> const rs = require('read-stats')
 
 >>> const testData = `
       Playing games has always been thought to be important to 
@@ -21,15 +21,15 @@ install required packages with npm install
       interpersonal relationships but is also a wonderful way 
       to release built up tension. `
 
->>> readability.fleschReadingEase(test_data)
->>> readability.fleschKincaidGrade(test_data)
->>> readability.coleman_liau_index(test_data)
->>> textstat.automated_readability_index(test_data)
->>> textstat.dale_chall_readability_score(test_data)
->>> textstat.difficult_words(test_data)
->>> textstat.linsear_write_formula(test_data)
->>> textstat.gunning_fog(test_data)
->>> textstat.text_standard(test_data)
+>>> rs.fleschReadingEase(test_data)
+>>> rs.fleschKincaidGrade(test_data)
+>>> rs.colemanLiauIndex(test_data)
+>>> rs.automatedReadabilityIndex(test_data)
+>>> rs.daleChallReadabilityScore(test_data)
+>>> rs.difficultWords(test_data)
+>>> rs.linsearWriteFormula(test_data)
+>>> rs.gunningFog(test_data)
+>>> rs.textStandard(test_data)
 ```
 
 The argument (text) for all the defined functions remains the same -
@@ -37,74 +37,44 @@ i.e the text for which statistics need to be calculated.
 
 ## Install
 
-You can install textstat either via the Python Package Index (PyPI) or from source.
+You can use directly from source. Coming on npm soon
 
-#### Install using pip
-
-```shell
-pip install textstat
-```
-
-#### Install using easy_install
+#### Install using npm [NOT YET]
 
 ```shell
-easy_install textstat
-```
-
-#### Install lastest version from GitHub
-
-```shell
-git clone https://github.com/shivam5992/textstat.git
-cd textstat
-pip install .
-```
-
-#### Install from PyPI
-
-Download the latest version of textstat from http://pypi.python.org/pypi/textstat/
-
-You can install it by doing the following:
-
-```shell
-tar xfz textstat-*.tar.gz
-cd textstat-*/
-python setup.py build
-python setup.py install # as root
+npm install read-stats
 ```
 
 ## List of Functions
 
 ### Syllable Count
 
-```python
-textstat.syllable_count(text, lang='en_US')
+```javascript
+rs.syllableCount(text, lang='en-US')
 ```
 
 Returns the number of syllables present in the given text.
 
-Uses the Python module [Pyphen](https://github.com/Kozea/Pyphen)
-for syllable calculation. Optional `lang` specifies to
-Pyphen which language dictionary to use.
-
-Default is `'en_US'`, `'en_GB'` will also work.
-
+Uses the npm module [syllable](https://github.com/words/syllable)
+for syllable calculation. `lang` currently only used for proper lowercasing  
+Should be passed to `syllable` or write own library for this
 
 ### Lexicon Count
 
-```python
-textstat.lexicon_count(text, removepunct=True)
+```javascript
+rs.lexiconCount(text, removePunctuation=true)
 ```
 
 Calculates the number of words present in the text.
-Optional `removepunct` specifies whether we need to take
+Optional `removePunctuation` specifies whether we need to take
 punctuation symbols into account while counting lexicons.
-Default value is `True`, which removes the punctuation
+Default value is `true`, which removes the punctuation
 before counting lexicon items.
 
 ### Sentence Count
 
-```python
-textstat.sentence_count(text)
+```javascript
+rs.sentenceCount(text)
 ```
 
 Returns the number of sentences present in the given text.
@@ -112,8 +82,8 @@ Returns the number of sentences present in the given text.
 
 ### The Flesch Reading Ease formula
 
-```python
-textstat.flesch_reading_ease(text)
+```javascript
+rs.fleschReadingEase(text)
 ```
 
 Returns the Flesch Reading Ease Score.
@@ -140,8 +110,8 @@ the score can be. A negative score is valid.
 
 ### The Flesch-Kincaid Grade Level
 
-```python
-textstat.flesch_kincaid_grade(text)
+```javascript
+rs.fleschKincaidGrade(text)
 ```
 
 Returns the Flesch-Kincaid Grade of the given text. This is a grade
@@ -153,8 +123,8 @@ read the document.
 
 ### The Fog Scale (Gunning FOG Formula)
 
-```python
-textstat.gunning_fog(text)
+```javascript
+rs.gunningFog(text)
 ```
 
 Returns the FOG index of the given text. This is a grade formula in that
@@ -165,8 +135,8 @@ a score of 9.3 means that a ninth grader would be able to read the document.
 
 ### The SMOG Index
 
-```python
-textstat.smog_index(text)
+```javascript
+rs.smogIndex(text)
 ```
 
 Returns the SMOG index of the given text. This is a grade formula in that
@@ -181,8 +151,8 @@ the SMOG formula was normed on 30-sentence samples. textstat requires atleast
 
 ### Automated Readability Index
 
-```python
-textstat.automated_readability_index(text)
+```javascript
+rs.automatedReadabilityIndex(text)
 ```
 
 Returns the ARI (Automated Readability Index) which outputs
@@ -197,8 +167,8 @@ the text is 6th to 7th grade.
 
 ### The Coleman-Liau Index
 
-```python
-textstat.coleman_liau_index(text)
+```javascript
+rs.colemanLiauIndex(text)
 ```
 
 Returns the grade level of the text using the Coleman-Liau Formula. This is
@@ -210,8 +180,8 @@ able to read the document.
 
 ### Linsear Write Formula
 
-```python
-textstat.linsear_write_formula(text)
+```javascript
+rs.linsearWriteFormula(text)
 ```
 
 Returns the grade level using the Linsear Write Formula. This is
@@ -223,8 +193,8 @@ able to read the document.
 
 ### Dale-Chall Readability Score
 
-```python
-textstat.dale_chall_readability_score(text)
+```javascript
+rs.daleChallReadabilityScore(text)
 ```
 
 Different from other tests, since it uses a lookup table
@@ -245,45 +215,13 @@ the grade level using the New Dale-Chall Formula.
 
 ### Readability Consensus based upon all the above tests
 
-```python
-textstat.text_standard(text, float_output=False)
+```javascript
+rs.text_standard(text, float_output=False)
 ```
 
 Based upon all the above tests, returns the estimated school
 grade level required to understand the text.
 
 Optional `float_output` allows the score to be returned as a
-`float`. Defaults to `False`.
-
-
-
-## Contributing
-
-If you find any problems, you should open an
-[issue](https://github.com/shivam5992/textstat/issues).
-
-If you can fix an issue you've found, or another issue, you should open
-a [pull request](https://github.com/shivam5992/textstat/pulls).
-
-1. Fork this repository on GitHub to start making your changes to the master
-branch (or branch off of it).
-2. Write a test which shows that the bug was fixed or that the feature works as expected.
-3. Send a pull request!
-
-### Development setup
-
-> It is recommended you use a [virtual environment](
-https://docs.python.org/3/tutorial/venv.html), or [Pipenv](
-https://docs.pipenv.org/) to keep your development work isolated from your
-systems Python installation.
-
-```bash
-$ git clone https://github.com/<yourname>/textstat.git  # Clone the repo from your fork
-$ cd textstat
-$ pip install -r requirements.txt  # Install all dependencies
-
-$ # Make changes
-
-$ python -m unittest test.py  # Run tests
-```
+`float`. Defaults to `false`.
 
