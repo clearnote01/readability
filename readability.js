@@ -14,6 +14,7 @@ Math.legacyRound = (number, points = 0) => {
 class Readability {
   static getGradeSuffix (grade) {
     grade = Math.floor(grade)
+    // poor function fix this, gives { 22th and 23th grade }
     const gradeMap = {
       1: 'st',
       2: 'nd',
@@ -191,7 +192,7 @@ class Readability {
     upper = Math.ceil(this.automatedReadabilityIndex(text))
     grade.push(Math.floor(lower))
     grade.push(Math.floor(upper))
-    
+
     // console.log('grade till now : 2 : \n', grade)
 
     // // Appending  Dale_Chall_Readability_Score
@@ -231,10 +232,7 @@ class Readability {
     const lowerScore = Math.floor(score) - 1
     const upperScore = lowerScore + 1
     return `${lowerScore}${Readability.getGradeSuffix(lowerScore)} and ${upperScore}${Readability.getGradeSuffix(upperScore)} grade`
-  }   
+  }
 }
-const r = new Readability()
-let text = 'the fuck is wrotnt? I don\'t understand thisFire | love! Fuck, you. \nLike this is hell!, I don\'t understand this. We; have found love.'
-
-r.syllableCount(text)
-module.exports = Readability
+const readability = new Readability()
+module.exports = readability

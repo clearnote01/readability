@@ -1,7 +1,6 @@
-const Ts = require('./textstat')
+const ts = require('./readability')
 const fs = require('fs')
 const text = fs.readFileSync('sample_text.txt', 'utf8')
-const ts = new Ts()
 console.log('Text: ')
 console.log(text)
 
