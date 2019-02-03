@@ -34,9 +34,14 @@ class Readability {
     text = text.replace(punctuationRE, '')
     return text
   }
+  static split (text) {
+    text = text.split(/,| |\n|\r/g)
+    text = text.filter(n => n)
+    return text
+  }
   lexiconCount (text, removePunctuation = true) {
     if (removePunctuation) text = this.removePunctuation(text)
-    text = text.split(/,| |\n|\r/)
+    text = text.split(/,| |\n|\r/g)
     text = text.filter(n => n)
     return text.length
   }
@@ -46,7 +51,7 @@ class Readability {
     if (!text) return 0
     // eventually replace syllable
     const count = syllable(text)
-    return count - 2 // done because js lib overs compared to python // should be probably removed
+    return count //  js lib overs compared to python 
   }
   sentenceCount (text) {
     let ignoreCount = 0
@@ -101,7 +106,7 @@ class Readability {
   polySyllableCount (text) {
     let count = 0
     let wrds
-    for (let word of text.split(' ')) {
+    for (let word of Readability.split(text)) {
       wrds = this.syllableCount(word)
       if (wrds >= 3) count += 1
     }
@@ -139,7 +144,22 @@ class Readability {
     return !isNaN(returnVal) ? returnVal : 0.0
   }
   linsearWriteFormula (text) {
-    // to be implemented
+    let easyWord = 0
+    let difficultWord = 0
+    let textList = Readability.split(text).slice(0, 100)
+
+    for (let word of textList) {
+      if (this.syllableCount(word) < 3) {
+        easyWord += 1
+      } else {
+        difficultWord += 1
+      }
+    }
+    text = textList.join(' ')
+    let number = (easyWord * 1 + difficultWord * 3) / this.sentenceCount(text)
+    let returnVal = number <= 20 ? (number - 2) / 2 : number / 2
+    returnVal = Math.legacyRound(returnVal, 1)
+    return !isNaN(returnVal) ? returnVal : 0.0
   }
   difficultWords (text, syllable_threshold = 2) {
     // to be implemented
@@ -201,11 +221,12 @@ class Readability {
     // upper = Math.ceil(this.daleChallReadabilityScore(text))
     // grade.push(Math.floor(lower))
     // grade.push(Math.floor(upper))
-    // // Appending  Linsear_Write_Formula
-    // lower = Math.legacyRound(this.linsearWriteFormula(text))
-    // upper = Math.ceil(this.linsearWriteFormula(text))
-    // grade.push(Math.floor(lower))
-    // grade.push(Math.floor(upper))
+    // Appending  Linsear_Write_Formula
+    lower = Math.legacyRound(this.linsearWriteFormula(text))
+    upper = Math.ceil(this.linsearWriteFormula(text))
+    grade.push(Math.floor(lower))
+    grade.push(Math.floor(upper))
+    console.log('grade List: ', grade)
     // // Appending Gunning Fog Index
     // lower = Math.legacyRound(this.gunningFog(text))
     // upper = Math.ceil(this.gunningFog(text))

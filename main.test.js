@@ -1,3 +1,4 @@
+const a = Date.now()
 const ts = require('./main')
 const fs = require('fs')
 const text = fs.readFileSync('sample_text.txt', 'utf8')
@@ -25,6 +26,7 @@ function test () {
   console.log('colemanLiauIndex: \n', ts.colemanLiauIndex(text))
   console.log('automatedReadabilityIndex: \n', ts.automatedReadabilityIndex(text))
   console.log('textStandard: \n', ts.textStandard(text))
+  console.log('linsearWriteFormula: \n', ts.linsearWriteFormula(text))
 }
-
 test()
+console.log('Time taken for execution : ', Date.now() - a, 'ms')
