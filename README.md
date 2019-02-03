@@ -1,14 +1,14 @@
 # readability 
 npm package to calculate statistics from text to determine readability, complexity and grade level of a particular corpus.
 
-A rewrite of textstat library in JS
+A rewrite of [textstat](https://github.com/shivam5992/textstat) library in JS
 
 ## Usage
 
-install required packages with npm install
+install required packages with `npm install text-readability`
 
 ```javascript
->>> const rs = require('read-stats')
+>>> const rs = require('text-readablity')
 
 >>> const testData = `
       Playing games has always been thought to be important to 
@@ -35,14 +35,10 @@ install required packages with npm install
 The argument (text) for all the defined functions remains the same -
 i.e the text for which statistics need to be calculated.
 
-## Install
-
-You can use directly from source. Coming on npm soon
-
-#### Install using npm [NOT YET]
+## Install using npm
 
 ```shell
-npm install read-stats
+npm install text-readability
 ```
 
 ## List of Functions
@@ -216,7 +212,7 @@ the grade level using the New Dale-Chall Formula.
 ### Readability Consensus based upon all the above tests
 
 ```javascript
-rs.text_standard(text, float_output=False)
+rs.textStandard(text, float_output=False)
 ```
 
 Based upon all the above tests, returns the estimated school

@@ -1,4 +1,4 @@
-const ts = require('./readability')
+const ts = require('./main')
 const fs = require('fs')
 const text = fs.readFileSync('sample_text.txt', 'utf8')
 console.log('Text: ')
