@@ -21,15 +21,15 @@ install required packages with `npm install text-readability`
       interpersonal relationships but is also a wonderful way 
       to release built up tension. `
 
->>> rs.fleschReadingEase(test_data)
->>> rs.fleschKincaidGrade(test_data)
->>> rs.colemanLiauIndex(test_data)
->>> rs.automatedReadabilityIndex(test_data)
->>> rs.daleChallReadabilityScore(test_data)
->>> rs.difficultWords(test_data)
->>> rs.linsearWriteFormula(test_data)
->>> rs.gunningFog(test_data)
->>> rs.textStandard(test_data)
+>>> rs.fleschReadingEase(testData)
+>>> rs.fleschKincaidGrade(testData)
+>>> rs.colemanLiauIndex(testData)
+>>> rs.automatedReadabilityIndex(testData)
+>>> rs.daleChallReadabilityScore(testData)
+>>> rs.difficultWords(testData)
+>>> rs.linsearWriteFormula(testData)
+>>> rs.gunningFog(testData)
+>>> rs.textStandard(testData)
 ```
 
 The argument (text) for all the defined functions remains the same -
