@@ -8,7 +8,7 @@ A rewrite of [textstat](https://github.com/shivam5992/textstat) library in JS
 install required packages with `npm install text-readability`
 
 ```javascript
->>> const rs = require('text-readablity')
+>>> const rs = require('text-readability')
 
 >>> const testData = `
       Playing games has always been thought to be important to 
