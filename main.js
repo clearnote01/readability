@@ -54,7 +54,7 @@ class Readability {
     if (!text) return 0
     // eventually replace syllable
     const count = syllable(text)
-    return count  //  js lib overs compared to python 
+    return count //  js lib overs compared to python
   }
   sentenceCount (text) {
     let ignoreCount = 0
@@ -219,8 +219,10 @@ class Readability {
     if (score < 100 && score >= 90) grade.push(5)
     else if (score < 90 && score >= 80) grade.push(6)
     else if (score < 80 && score >= 70) grade.push(7)
-    else if (score < 70 && score >= 60) { grade.push(8); grade.push(9); }
-    else if (score < 60 && score >= 50) grade.push(10)
+    else if (score < 70 && score >= 60) {
+      grade.push(8)
+      grade.push(9)
+    } else if (score < 60 && score >= 50) grade.push(10)
     else if (score < 50 && score >= 40) grade.push(11)
     else if (score < 40 && score >= 30) grade.push(12)
     else grade.push(13)
