@@ -165,7 +165,6 @@ class Readability {
     return !isNaN(returnVal) ? returnVal : 0.0
   }
   difficultWords (text, syllableThreshold = 2) {
-    // to be implemented
     const textList = text.match(/[\w=‘’]+/g)
     const diffWordsSet = new Set()
     for (let word of textList) {
@@ -176,16 +175,37 @@ class Readability {
     return [...diffWordsSet].length
   }
   daleChallReadabilityScore (text) {
-    // to be implmented
+    const wordCount = this.lexiconCount(text)
+    const count = wordCount - this.difficultWords(text)
+    const per = (count / wordCount * 100)
+    if (isNaN(per)) return 0.0
+    const difficultWords = 100 - per
+    // console.log('difficult words : ', difficultWords)
+    let score = (0.1579 * difficultWords) + (0.0496 * this.averageSentenceLength(text))
+    if (difficultWords > 5) score += 3.6365
+    return Math.legacyRound(score, 2)
   }
   gunningFog (text) {
-    // to be implemented
+    const perDiffWords = (this.difficultWords(text, 3) / this.lexiconCount(text) * 100)
+    const grade = 0.4 * (this.averageSentenceLength(text) + perDiffWords)
+    const returnVal = Math.legacyRound(grade, 2)
+    return !isNaN(returnVal) ? returnVal : 0.0
   }
   lix (text) {
-    // to be implemented
+    const words = Readability.split(text)
+    const wordsLen = words.length
+    const longWords = words.filter(wrd => wrd.length > 6).length
+    const perLongWords = longWords * 100 / wordsLen
+    const asl = this.averageSentenceLength(text)
+    const lix = asl + perLongWords
+    return Math.legacyRound(lix, 2)
   }
   rix (text) {
-    // to be implemented
+    const words = Readability.split(text)
+    const longWordsCount = words.filter(wrd => wrd.length > 6).length
+    const sentencesCount = this.sentenceCount(text)
+    const rix = longWordsCount / sentencesCount
+    return !isNaN(rix) ? Math.legacyRound(rix, 2) : 0.0
   }
   textStandard (text, floatOutput = null) {
     const grade = []
@@ -226,23 +246,24 @@ class Readability {
 
     // console.log('grade till now : 2 : \n', grade)
 
-    // // Appending  Dale_Chall_Readability_Score
-    // lower = Math.legacyRound(this.daleChallReadabilityScore(text))
-    // console.log('daleChall: ', lower)
-    // upper = Math.ceil(this.daleChallReadabilityScore(text))
-    // grade.push(Math.floor(lower))
-    // grade.push(Math.floor(upper))
-    // Appending  Linsear_Write_Formula
+    // Appending  Dale_Chall_Readability_Score
+    lower = Math.legacyRound(this.daleChallReadabilityScore(text))
+    upper = Math.ceil(this.daleChallReadabilityScore(text))
+    grade.push(Math.floor(lower))
+    grade.push(Math.floor(upper))
+
+    // Appending linsearWriteFormula
     lower = Math.legacyRound(this.linsearWriteFormula(text))
     upper = Math.ceil(this.linsearWriteFormula(text))
     grade.push(Math.floor(lower))
     grade.push(Math.floor(upper))
-    console.log('grade List: ', grade)
-    // // Appending Gunning Fog Index
-    // lower = Math.legacyRound(this.gunningFog(text))
-    // upper = Math.ceil(this.gunningFog(text))
-    // grade.push(Math.floor(lower))
-    // grade.push(Math.floor(upper))
+
+    // Appending Gunning Fog Index
+    lower = Math.legacyRound(this.gunningFog(text))
+    upper = Math.ceil(this.gunningFog(text))
+    grade.push(Math.floor(lower))
+    grade.push(Math.floor(upper))
+
     // d = Counter(grade)
     // final_grade = d.most_common(1)
     // score = final_grade[0][0]
@@ -257,6 +278,7 @@ class Readability {
     //         upper_score, get_grade_suffix(upper_score)
     //     )
     // Finding the Readability Consensus based upon all the above tests
+    // console.log('grade List: ', grade)
     const counterMap = [...new Set(grade)].map(x => [x, grade.filter(y => y === x).length])
     const finalGrade = counterMap.reduce((x, y) => y[1] >= x[1] ? y : x)
     score = finalGrade[0]
