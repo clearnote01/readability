@@ -1,8 +1,9 @@
 const fs = require('fs')
+const path = require('path')
 const syllable = require('syllable')
 const punctuationRE = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-./:;<=>?@[\]^_`{|}~]/g
-const easyWprds = fs.readFileSync('easy_words.txt', 'utf-8')
-const easyWordSet = new Set(easyWprds.split(/\n/g))
+const easyWords = require('./easy_words')
+const easyWordSet = new Set(easyWords)
 
 // extends Math object
 Math.copySign = (x, y) => {
@@ -167,6 +168,8 @@ class Readability {
   difficultWords (text, syllableThreshold = 2) {
     const textList = text.match(/[\w=‘’]+/g)
     const diffWordsSet = new Set()
+    if (textList === null)
+      return diffWordsSet
     for (let word of textList) {
       if (!easyWordSet.has(word) && this.syllableCount(word) >= syllableThreshold) {
         diffWordsSet.add(word)
@@ -288,6 +291,48 @@ class Readability {
     const lowerScore = Math.floor(score) - 1
     const upperScore = lowerScore + 1
     return `${lowerScore}${Readability.getGradeSuffix(lowerScore)} and ${upperScore}${Readability.getGradeSuffix(upperScore)} grade`
+  }
+  textMedian (text) {
+    const grade = []
+    // Appending Flesch Kincaid Grade
+    grade.push(this.fleschKincaidGrade(text))
+
+    let score = this.fleschReadingEase(text)
+    if (score < 100 && score >= 90) grade.push(5)
+    else if (score < 90 && score >= 80) grade.push(6)
+    else if (score < 80 && score >= 70) grade.push(7)
+    else if (score < 70 && score >= 60) {
+      grade.push(8)
+      grade.push(9)
+    } else if (score < 60 && score >= 50) grade.push(10)
+    else if (score < 50 && score >= 40) grade.push(11)
+    else if (score < 40 && score >= 30) grade.push(12)
+    else grade.push(13)
+
+    grade.push(this.smogIndex(text))
+
+    // Appending Coleman_Liau_Index
+    grade.push(this.colemanLiauIndex(text))
+
+    // Appending Automated_Readability_Index
+    grade.push(this.automatedReadabilityIndex(text))
+
+    // Appending  Dale_Chall_Readability_Score
+    grade.push(this.daleChallReadabilityScore(text))
+
+    // Appending linsearWriteFormula
+    grade.push(this.linsearWriteFormula(text))
+
+    // Appending Gunning Fog Index
+    grade.push(this.gunningFog(text))
+
+    // compute median
+    grade.sort(function(a, b) { return a - b })
+    let half = Math.floor(grade.length / 2)
+    if (half & 0x1)
+      return (grade[half-1] + grade[half])/2
+    else
+      return grade[half]
   }
 }
 const readability = new Readability()
