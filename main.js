@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const syllable = require('syllable')
+const pluralize = require('pluralize')
 const punctuationRE = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-./:;<=>?@[\]^_`{|}~]/g
 const easyWords = require('./easy_words')
 const easyWordSet = new Set(easyWords)
@@ -100,6 +101,16 @@ class Readability {
     const returnVal = Math.legacyRound(flesch, 2)
     return returnVal
   }
+  fleschReadingEaseToGrade (score) {
+    if (score < 100 && score >= 90) return 5
+    else if (score < 90 && score >= 80) return 6
+    else if (score < 80 && score >= 70) return 7
+    else if (score < 70 && score >= 60) return 8.5
+    else if (score < 60 && score >= 50) return 11
+    else if (score < 50 && score >= 40) return 13 // college
+    else if (score < 40 && score >= 30) return 15
+    else return 16
+  }
   fleschKincaidGrade (text) {
     const sentenceLength = this.averageSentenceLength(text)
     const syllablePerWord = this.averageSyllablePerWord(text)
@@ -165,13 +176,37 @@ class Readability {
     returnVal = Math.legacyRound(returnVal, 1)
     return !isNaN(returnVal) ? returnVal : 0.0
   }
+  presentTense(word) {
+    // good enough for most long words -- we only care about "difficult" words
+    // of two or more syllables anyway.
+    // Doesn't work for words ending in "e" that aren't "easy"
+    if (word.length < 6)
+      return word
+    if (word.endsWith('ed')) {
+      if (easyWordSet.has(word.slice(0, -1)))
+        return word.slice(0, -1) // "easy" word ending in e
+      else
+        return word.slice(0, -2) // assume we remove "ed"
+    }
+    if (word.endsWith('ing')) {
+      const suffixIngToE = word.slice(0, -3) + "e" // e.g. forcing -> force
+      if (easyWordSet.has(suffixIngToE))
+        return suffixIngToE
+      else
+        return word.slice(0, -3)
+    }
+    return word
+  }
   difficultWords (text, syllableThreshold = 2) {
     const textList = text.match(/[\w=‘’]+/g)
     const diffWordsSet = new Set()
     if (textList === null)
       return diffWordsSet
     for (let word of textList) {
-      if (!easyWordSet.has(word) && this.syllableCount(word) >= syllableThreshold) {
+      const normalized = this.presentTense(pluralize(word.toLocaleLowerCase(), 1))
+      // console.log(`difficultWords(${word}): norm=${normalized}, `
+      //             `${this.syllableCount(word)} syllables, easy? ${easyWordSet.has(normalized)}`)
+      if (!easyWordSet.has(normalized) && this.syllableCount(word) >= syllableThreshold) {
         diffWordsSet.add(word)
       }
     }
@@ -187,6 +222,15 @@ class Readability {
     let score = (0.1579 * difficultWords) + (0.0496 * this.averageSentenceLength(text))
     if (difficultWords > 5) score += 3.6365
     return Math.legacyRound(score, 2)
+  }
+  daleChallToGrade (score) {
+    if (score <= 4.9) return 4
+    if (score < 5.9) return 5
+    if (score < 6.9) return 7
+    if (score < 7.9) return 9
+    if (score < 8.9) return 11
+    if (score < 9.9) return 13
+    else return 16
   }
   gunningFog (text) {
     const perDiffWords = (this.difficultWords(text, 3) / this.lexiconCount(text) * 100)
@@ -219,16 +263,8 @@ class Readability {
     grade.push(Math.floor(upper))
 
     let score = this.fleschReadingEase(text)
-    if (score < 100 && score >= 90) grade.push(5)
-    else if (score < 90 && score >= 80) grade.push(6)
-    else if (score < 80 && score >= 70) grade.push(7)
-    else if (score < 70 && score >= 60) {
-      grade.push(8)
-      grade.push(9)
-    } else if (score < 60 && score >= 50) grade.push(10)
-    else if (score < 50 && score >= 40) grade.push(11)
-    else if (score < 40 && score >= 30) grade.push(12)
-    else grade.push(13)
+    let freGrade = this.fleschReadingEaseToGrade(score)
+    grade.push(freGrade)
 
     // console.log('grade till now: \n', grade)
 
@@ -252,8 +288,8 @@ class Readability {
     // console.log('grade till now : 2 : \n', grade)
 
     // Appending  Dale_Chall_Readability_Score
-    lower = Math.legacyRound(this.daleChallReadabilityScore(text))
-    upper = Math.ceil(this.daleChallReadabilityScore(text))
+    lower = Math.legacyRound(this.daleChallToGrade(this.daleChallReadabilityScore(text)))
+    upper = Math.ceil(this.daleChallToGrade(this.daleChallReadabilityScore(text)))
     grade.push(Math.floor(lower))
     grade.push(Math.floor(upper))
 
@@ -297,17 +333,9 @@ class Readability {
     // Appending Flesch Kincaid Grade
     grade.push(this.fleschKincaidGrade(text))
 
-    let score = this.fleschReadingEase(text)
-    if (score < 100 && score >= 90) grade.push(5)
-    else if (score < 90 && score >= 80) grade.push(6)
-    else if (score < 80 && score >= 70) grade.push(7)
-    else if (score < 70 && score >= 60) {
-      grade.push(8)
-      grade.push(9)
-    } else if (score < 60 && score >= 50) grade.push(10)
-    else if (score < 50 && score >= 40) grade.push(11)
-    else if (score < 40 && score >= 30) grade.push(12)
-    else grade.push(13)
+    const score = this.fleschReadingEase(text)
+    const freGrade = this.fleschReadingEaseToGrade(score)
+    grade.push(freGrade)
 
     grade.push(this.smogIndex(text))
 
@@ -318,7 +346,7 @@ class Readability {
     grade.push(this.automatedReadabilityIndex(text))
 
     // Appending  Dale_Chall_Readability_Score
-    grade.push(this.daleChallReadabilityScore(text))
+    grade.push(this.daleChallToGrade(this.daleChallReadabilityScore(text)))
 
     // Appending linsearWriteFormula
     grade.push(this.linsearWriteFormula(text))

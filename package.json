@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pluralize": "^8.0.0",
     "syllable": "^3.4.0"
   },
   "homepage": "https://github.com/clearnote01/readability#readme",
