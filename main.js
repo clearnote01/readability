@@ -101,7 +101,7 @@ class Readability {
     return returnVal
   }
   fleschReadingEaseToGrade (score) {
-    if (score < 100 && score >= 90) return 5
+    if (score >= 90) return 5
     else if (score < 90 && score >= 80) return 6
     else if (score < 80 && score >= 70) return 7
     else if (score < 70 && score >= 60) return 8.5
