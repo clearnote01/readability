@@ -196,7 +196,10 @@ class Readability {
     }
     return word
   }
-  difficultWords (text, syllableThreshold = 2) {
+  difficultWords (text, syllableThreshold) {
+    return [...this.difficultWordsSet(text, syllableThreshold)].length
+  }
+  difficultWordsSet (text, syllableThreshold = 2) {
     const textList = text.match(/[\w=‘’]+/g)
     const diffWordsSet = new Set()
     if (textList === null)
@@ -209,7 +212,7 @@ class Readability {
         diffWordsSet.add(word)
       }
     }
-    return [...diffWordsSet].length
+    return diffWordsSet
   }
   daleChallReadabilityScore (text) {
     const wordCount = this.lexiconCount(text)
