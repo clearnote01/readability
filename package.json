@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "pluralize": "^8.0.0",
-    "syllable": "^3.4.0"
+    "syllable": "^5.0.1"
   },
   "homepage": "https://github.com/clearnote01/readability#readme",
   "keywords": [
