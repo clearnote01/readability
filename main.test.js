@@ -28,6 +28,7 @@ function test () {
   console.log('automatedReadabilityIndex: \n', ts.automatedReadabilityIndex(text))
   console.log('linsearWriteFormula: \n', ts.linsearWriteFormula(text))
   console.log('difficultWords: \n', ts.difficultWords(text))
+  console.log('difficultWordsSet: \n', ts.difficultWordsSet(text))
   console.log('daleChallReadabilityScore: \n', ts.daleChallReadabilityScore(text))
   console.log('daleChallReadabilityScore grade: \n', ts.daleChallToGrade(ts.daleChallReadabilityScore(text)))
   console.log('gunningFog: \n', ts.gunningFog(text))
