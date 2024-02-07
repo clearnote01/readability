@@ -1,8 +1,7 @@
-const path = require('path')
-const syllable = require('syllable')
-const pluralize = require('pluralize')
+import { syllable } from 'syllable';
+import pluralize from 'pluralize';
 const punctuationRE = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-./:;<=>?@[\]^_`{|}~]/g
-const easyWords = require('./easy_words')
+import easyWords from './easy_words.js';
 const easyWordSet = new Set(easyWords)
 
 // extends Math object
@@ -366,4 +365,4 @@ class Readability {
   }
 }
 const readability = new Readability()
-module.exports = readability
+export default readability;
