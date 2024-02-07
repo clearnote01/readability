@@ -1,6 +1,6 @@
 const a = Date.now()
-const ts = require('./main')
-const fs = require('fs')
+import ts from './main.js';
+import fs from 'fs';
 const text = fs.readFileSync('sample_text.txt', 'utf8')
 console.log('Text: ')
 console.log(text)
