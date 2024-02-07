@@ -2949,4 +2949,4 @@ const easyWords = [
   "youth",
   "you've",
 ]
-module.exports = easyWords
+export default easyWords;
