@@ -6,6 +6,7 @@ const easyWordSet = new Set(easyWords)
 
 // extends Math object
 Math.copySign = (x, y) => {
+  if (y === 0) return 0;
   return x * (y / Math.abs(y))
 }
 Math.legacyRound = (number, points = 0) => {
