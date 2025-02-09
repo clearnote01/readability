@@ -172,8 +172,7 @@ class Readability {
     text = textList.join(' ')
     let number = (easyWord * 1 + difficultWord * 3) / this.sentenceCount(text)
     let returnVal = number <= 20 ? (number - 2) / 2 : number / 2
-    returnVal = Math.legacyRound(returnVal, 1)
-    return !isNaN(returnVal) ? returnVal : 0.0
+    return Math.legacyRound(returnVal, 1)
   }
   presentTense(word) {
     // good enough for most long words -- we only care about "difficult" words
@@ -236,9 +235,9 @@ class Readability {
   }
   gunningFog (text) {
     const perDiffWords = (this.difficultWords(text, 3) / this.lexiconCount(text) * 100)
+    if (isNaN(perDiffWords)) return 0.0
     const grade = 0.4 * (this.averageSentenceLength(text) + perDiffWords)
-    const returnVal = Math.legacyRound(grade, 2)
-    return !isNaN(returnVal) ? returnVal : 0.0
+    return Math.legacyRound(grade, 2)
   }
   lix (text) {
     const words = Readability.split(text)
